@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f4f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Prüfungstrainer · GuK FH JOANNEUM</title>
+<style>
+:root{--bg:#f4f4f6;--card:#fff;--ink:#111;--muted:#6b6b72;--acc:#1a73e8;--soft:#e8f0fe;--line:#e3e3e8}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--card:#17171a;--ink:#f2f2f5;--muted:#9a9aa3;--acc:#4cb4ff;--soft:#0e2233;--line:#2a2a30}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) max(16px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(16px,env(safe-area-inset-left))}
+main{max-width:760px;margin:0 auto;padding:clamp(28px,8vh,72px) 0 40px}
+.st{font-size:13.5px;color:var(--muted)}
+h1{font-size:clamp(32px,7vw,44px);line-height:1.08;margin:6px 0 8px;letter-spacing:-.02em}
+h1 span{color:var(--acc)}
+.next{background:var(--card);border-radius:26px;padding:18px 20px;margin:20px 0 26px}
+.next b{display:block;font-size:28px;color:var(--acc);font-variant-numeric:tabular-nums}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+a.c{display:flex;flex-direction:column;gap:6px;background:var(--card);border-radius:24px;padding:18px 20px;text-decoration:none;color:inherit;border:1px solid transparent;min-height:150px;transition:transform .12s}
+a.c:hover{border-color:var(--acc)} a.c:active{transform:scale(.98)}
+a.c:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.tag{align-self:flex-start;font-size:12px;font-weight:600;color:var(--acc);background:var(--soft);padding:3px 10px;border-radius:99px}
+.c h2{margin:2px 0 0;font-size:19px;line-height:1.2}
+.c p{margin:0;font-size:14px;color:var(--muted)}
+.cd{margin-top:auto;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.c.done{opacity:.55}
+footer{margin-top:30px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<main>
+ <div class="st">GuK · FH JOANNEUM Graz · WS 2026/27</div>
+ <h1>Meine <span>Prüfungstrainer</span></h1>
+ <div class="next" id="next"></div>
+ <div class="grid" id="g"></div>
+ <footer><span>made by @ryumatvv7</span><span id="clk"></span></footer>
+</main>
+<script>
+/* Fach hinzufügen: eine Zeile mit [Repo, Kürzel, Name, Beschreibung, [Prüfungstermine JJJJ-MM-TT]] */
+const F=[
+ ["ap","AP","Allgemeine Pathologie","Reinisch · Krankheitslehre, Tumor, Diagnostik",["2027-02-03","2027-02-04","2027-03-19"]],
+ ["mgl","MGL 1","Medizinische Grundlagen 1","40 Fragen / 40 min über Moodle",["2027-01-19","2027-01-29","2027-03-12"]],
+ ["vbl","VBL 1","Verbandslehre 1","Theorie-Trainer",["2027-01-20"]],
+ ["guk","GuK 1","Gesundheits- und Krankenpflege 1","Skill + mündliche Fragen",["2026-11-19","2026-11-20","2027-02-05"]],
+ ["English","EN 1","English 1 · Medical English","Vokabeln & Fragen",[]],
+ ["erstehilfe","EH","Erste Hilfe","Notfall, Reanimation, ABCDE",[]]
+];
+const day=864e5, fmt=d=>d.toLocaleDateString("de-AT",{day:"2-digit",month:"2-digit",year:"numeric"});
+function nextOf(dates){const now=Date.now();return dates.map(s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d,8)}).filter(d=>d-now>-16*36e5).sort((a,b)=>a-b)[0];}
+function left(d){const ms=d-Date.now();if(ms<=0)return"heute";const D=Math.floor(ms/day);return D?`in ${D} Tag${D>1?"en":""}`:`in ${Math.floor(ms/36e5)} h`;}
+const items=F.map(f=>({f,n:nextOf(f[4])})).sort((a,b)=>(a.n?a.n:9e15)-(b.n?b.n:9e15));
+document.getElementById("g").innerHTML=items.map(({f,n})=>`<a class="c${f[4].length&&!n?" done":""}" href="./${f[0]}/"><span class="tag">${f[1]}</span><h2>${f[2]}</h2><p>${f[3]}</p><span class="cd">${n?`📅 ${fmt(n)} · ${left(n)}`:f[4].length?"✓ Termine vorbei":"Termin offen"}</span></a>`).join("");
+function tick(){const up=items.find(i=>i.n);const e=document.getElementById("next");
+ if(up){const ms=up.n-Date.now(),D=Math.floor(ms/day),H=Math.floor(ms/36e5)%24,M=Math.floor(ms/6e4)%60,S=Math.floor(ms/1e3)%60;
+  e.innerHTML=`<span class="st">Nächste Prüfung: ${up.f[2]} (${fmt(up.n)})</span><b>${ms>0?`${D} T ${String(H).padStart(2,"0")}:${String(M).padStart(2,"0")}:${String(S).padStart(2,"0")}`:"Heute – viel Erfolg! 🍀"}</b>`;}
+ else e.hidden=true;
+ document.getElementById("clk").textContent=new Date().toLocaleTimeString("de-AT",{hour:"2-digit",minute:"2-digit"});}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
