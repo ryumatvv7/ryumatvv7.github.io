@@ -6,9 +6,9 @@ Startseite für alle Prüfungstrainer (GuK, FH JOANNEUM Graz, WS 2026/27).
 
 | Fach | Trainer |
 |---|---|
-| Allgemeine Pathologie | https://ryumatvv7.github.io/ap/ |
-| Medizinische Grundlagen 1 | https://ryumatvv7.github.io/mgl/ |
-| Verbandslehre 1 | https://ryumatvv7.github.io/vbl/ |
+| Allgemeine Pathologie | https://ryumatvv7.github.io/AP/ |
+| Medizinische Grundlagen 1 | https://ryumatvv7.github.io/MGL/ |
+| Verbandslehre 1 | https://ryumatvv7.github.io/VBL/ |
 | Gesundheits- und Krankenpflege 1 | https://ryumatvv7.github.io/guk/ |
 | English 1 · Medical English | https://ryumatvv7.github.io/English/ |
 | Erste Hilfe | https://ryumatvv7.github.io/erstehilfe/ |
